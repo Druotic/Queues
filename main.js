@@ -49,31 +49,29 @@ app.get('/recent', function(req, res) {
 })
 
 app.post('/upload',[ multer({ dest: './uploads/'}), function(req, res){
-   console.log(req.body) // form fields
-   console.log(req.files) // form files
+  console.log(req.body) // form fields
+  console.log(req.files) // form files
 
-   if( req.files.image )
-   {
-     fs.readFile( req.files.image.path, function (err, data) {
-        if (err) throw err;
-        var img = new Buffer(data).toString('base64');
-        client.lpush('images', img)
-        console.log(img);
+  if( req.files.image )
+  {
+    fs.readFile( req.files.image.path, function (err, data) {
+      if (err) throw err;
+      var img = new Buffer(data).toString('base64');
+      client.lpush('images', img, function (err, data) {
+        fs.unlink(req.files.image.path, function (err) {
+          if (err) throw err;
+          console.log('Deleted temp file ' + req.files.image.path);
+        });
+      });
     });
   }
-
-   res.status(204).end()
+  res.status(204).end();
 }]);
 
 app.get('/meow', function(req, res) {
-  {
-    var item = client.lpop('images');
-    res.writeHead(200, {'content-type':'text/html'});
-    // items.forEach(function (imagedata)
-    // {
-
-       res.write("<h1>\n<img src='data:my_pic.jpg;base64,"+imagedata+"'/>");
-    // });
-     res.end();
-  }
+    client.lpop('images', function (err, data) {
+      res.writeHead(200, {'content-type':'text/html'});
+      res.write("<img src='data:my_pic.jpg;base64,"+data+"'/>");
+      res.end();
+    });
 })
