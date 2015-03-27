@@ -32,12 +32,15 @@ app.get('/', function(req, res) {
 });
 
 app.get('/get', function(req, res) {
-  client.get("foo", function(err, val) {res.send(val)});
+  client.get("foo", function(err, val) {
+    val = (val) ? val : "No value set - try POST /set";
+    res.send(val);
+  });
 });
 
 app.post('/set', function(req, res) {
   var key = "foo";
-  client.set(key, "this message will self-destruct in 10 seconds.");
+  client.set(key, "this message will self-destruct in 10 seconds");
   client.expire(key, 10);
   res.send("key set!");
 });
