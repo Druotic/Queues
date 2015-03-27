@@ -15,7 +15,7 @@ Also, it should be mentioned that the "cat picture uploads: queue" portion isn't
 It actually follows stack-like behaviour (LIFO), despite the naming throughout the instructions.
 
 
-Original Instructions/Spec
+Original Instructions/Spec - Also see [option 2](https://github.com/CSC-DevOps/Course/blob/master/HW/HW3.md)
 =========================
 
 ### Setup
