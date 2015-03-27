@@ -2,9 +2,21 @@ var redis   = require('redis');
 var multer  = require('multer');
 var express = require('express');
 var fs      = require('fs');
+var httpProxy = require('http-proxy');
+var http = require('http');
 
 var app = express();
 var client = redis.createClient(6379, '127.0.0.1', {});
+
+client.exists('hosts', function(err, exists) {
+  //delete previously stored hosts if they exist
+  if (exists)
+    client.del('hosts');
+    // load server host/ports
+    client.lpush( 'hosts', JSON.stringify({host: 'localhost', port: 3000}));
+    client.lpush( 'hosts', JSON.stringify({host: 'localhost', port: 3001}));
+    client.lpush( 'hosts', JSON.stringify({host: 'localhost', port: 3002}));
+});
 
 // Add hook to make it easier to get all visited URLS.
 app.use(function(req, res, next)
@@ -62,8 +74,37 @@ app.get('/meow', function(req, res) {
     });
 });
 
-var server = app.listen(3000, function () {
-  var host = server.address();
+var proxy = httpProxy.createProxyServer();
+var proxyServer = http.createServer(function (req, res) {
+  client.rpoplpush('hosts', 'hosts', function (err, target){
+    if (err) throw err;
+    console.log('Redirecting to target server: ' + target);
+    target = JSON.parse(target);
+    //modify format to form of {target: {host: "foo", port: 1234}} for proxy.web()
+    target = {target: target};
+    proxy.web(req, res, target);
+  });
+}).listen(80, function() {
+  var host = proxyServer.address();
+  console.log('Proxy server listening at http://%s:%s',
+    host.address, host.port);
+});
+
+var server0 = app.listen(3000, function () {
+  var host = server0.address();
+  console.log('Example app listening at http://%s:%s',
+    host.address, host.port);
+});
+
+var server1 = app.listen(3001, function () {
+  var host = server1.address();
+  console.log('Example app listening at http://%s:%s',
+    host.address, host.port);
+});
+
+
+var server2 = app.listen(3002, function () {
+  var host = server2.address();
   console.log('Example app listening at http://%s:%s',
     host.address, host.port);
 });
