@@ -22,8 +22,8 @@ client.exists('hosts', function(err, exists) {
 app.use(function(req, res, next)
 {
   console.log(req.method, req.url);
-  client.lpush('queue', req.url);
-  client.ltrim('queue', 0, 4);
+  client.lpush('recent', req.url);
+  client.ltrim('recent', 0, 4);
   next(); // Passing the request to the next handler in the stack.
 });
 
@@ -46,7 +46,7 @@ app.post('/set', function(req, res) {
 });
 
 app.get('/recent', function(req, res) {
-  client.lrange("queue", 0, 4, function(err, val) {res.send(val)});
+  client.lrange("recent", 0, 4, function(err, val) {res.send(val)});
 })
 
 app.post('/upload',[ multer({ dest: './uploads/'}), function(req, res) {
