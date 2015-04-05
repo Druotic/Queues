@@ -23,7 +23,7 @@ app.use(function(req, res, next)
 });
 
 app.get('/', function(req, res) {
-  res.send('hello world');
+  res.send('hello world (server port: #{server_port}, redis port: #{redis_port})');
 });
 
 app.get('/get', function(req, res) {
