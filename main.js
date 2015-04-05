@@ -6,7 +6,13 @@ var httpProxy = require('http-proxy');
 var http = require('http');
 
 var app = express();
-var client = redis.createClient(6379, '127.0.0.1', {});
+
+var args = process.argv.slice(2);
+var server_port = args[0];
+var redis_port = args[1];
+var client = redis.createClient(redis_port, '127.0.0.1', {});
+
+
 
 client.exists('hosts', function(err, exists) {
   //delete previously stored hosts if they exist
