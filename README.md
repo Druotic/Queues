@@ -1,11 +1,11 @@
-Cache, Proxies, Queues
+Cache, Proxies, Queues - Modified for HW4
 =========================
 All portions of the assignment are complete. Most of the implementation is 1:1 and very straight-forward
 according to the instructions given below.  However, some things which may be less obvious are as follows:
 
-The proxy strategy is to simply forward requests from port 80 to port 3000, 3001, 3002 in a round-robin
+~~The proxy strategy is to simply forward requests from port 80 to port 3000, 3001, 3002 in a round-robin
 style starting with port 3000. These values are hard-coded (inserted into redis at start time). Note 
-that the key 'hosts' will be wiped out when the application is started.
+that the key 'hosts' will be wiped out when the application is started.~~ Forwarding no longer supported due to the blue/green deployment strategy.  A single port for the server to run on, and a single port for which the redis instance is listening are used.
 
 I also added a bit to delete each temp file which is created when saving the image uploaded via `POST 
 /upload`.  It didn't make sense to keep these temp files around since they are being stored in redis. The
