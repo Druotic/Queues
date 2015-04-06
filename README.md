@@ -1,4 +1,4 @@
-Cache, Proxies, Queues - *initial instructions at the end*
+Cache, Proxies, Queues
 =========================
 All portions of the assignment are complete. Most of the implementation is 1:1 and very straight-forward
 according to the instructions given below.  However, some things which may be less obvious are as follows:
@@ -15,6 +15,7 @@ Also, it should be mentioned that the "cat picture uploads: queue" portion isn't
 It actually follows stack-like behaviour (LIFO), despite the naming throughout the instructions.
 
 
+Original Instructions/Spec - Also see [option 2](https://github.com/CSC-DevOps/Course/blob/master/HW/HW3.md)
 =========================
 
 ### Setup
